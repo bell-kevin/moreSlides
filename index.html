@@ -6,9 +6,9 @@
     <meta name="referrer" content="no-referrer" />
     <meta
       name="description"
-      content="10-minute presentation deck for the Utah Vehicle Health development prototype."
+      content="Presentation deck for the Utah Vehicle Health development prototype."
     />
-    <title>Utah Vehicle Health · 10-minute deck</title>
+    <title>Utah Vehicle Health · Deck</title>
     <style>
       :root {
         color-scheme: light;
@@ -505,21 +505,6 @@
         z-index: 30;
       }
 
-      .timecode {
-        position: fixed;
-        top: 1rem;
-        right: 1.15rem;
-        z-index: 25;
-        font-family: var(--font-mono);
-        font-size: 0.78rem;
-        color: var(--ink-650);
-        background: var(--white);
-        border: 1px solid var(--sand-200);
-        border-radius: 999px;
-        padding: 0.28rem 0.7rem;
-        box-shadow: var(--shadow-sm);
-      }
-
       .counter {
         position: fixed;
         bottom: 0.9rem;
@@ -682,7 +667,6 @@
           overflow: visible;
         }
         .progress,
-        .timecode,
         .counter,
         .nav,
         .help-btn,
@@ -713,13 +697,11 @@
   </head>
   <body>
     <div class="progress" id="progress"></div>
-    <div class="timecode" id="timecode">0:00–0:40</div>
 
     <main class="deck" id="deck">
       <!-- 1. Title & boundary -->
       <section
         class="slide slide--title is-active"
-        data-time="0:00–0:40"
         data-guardrail="true"
         data-notes="This is a presentation-ready development prototype built from a private, page-sampled 10,000-vehicle cohort. Every result I show is sample-based, not a population estimate. The project does not rank counties or diagnose vehicles."
       >
@@ -751,7 +733,6 @@
       <!-- 2. Research question -->
       <section
         class="slide"
-        data-time="0:40–1:25"
         data-notes="Attempts separated by no more than 30 days form one episode. This keeps rapid fail/retest sequences from becoming repeated target rows. Non-pass combines fail, reject, and abort; blanks remain unlabeled."
       >
         <p class="eyebrow">Research question</p>
@@ -780,7 +761,6 @@
       <!-- 3. Development data -->
       <section
         class="slide"
-        data-time="1:25–2:15"
         data-guardrail="true"
         data-notes="9,996 private tokens remained after validation, producing 83,552 source events and 69,588 episodes. These are reconciliation counts, not Utah totals. Page sampling over-represents vehicles with more inspection records, and participating feeds do not cover all 29 counties."
       >
@@ -816,7 +796,6 @@ build 30-day episodes
       <!-- 4. Leakage-safe design -->
       <section
         class="slide"
-        data-time="2:15–3:10"
         data-notes="Every feature window ends before the target episode. The model uses prior outcomes, history depth, timing, age, previously observed make/model, public county context, and season. It excludes current-test diagnostics, future records, identifiers, stations, technicians, and later attempts. The 2025 gate was opened once after specifications were frozen — a development holdout, not a pristine future test."
       >
         <p class="eyebrow">Leakage-safe design</p>
@@ -859,7 +838,6 @@ build 30-day episodes
       <!-- 5. Model comparison -->
       <section
         class="slide"
-        data-time="3:10–4:20"
         data-guardrail="true"
         data-notes="Higher PR-AUC and lower Brier are better. Logistic beat both baselines and the boosted-tree benchmark in this one-time sample comparison. Avoid the word accuracy, which obscures class imbalance and calibration."
       >
@@ -913,7 +891,6 @@ build 30-day episodes
       <!-- 6. Model decision -->
       <section
         class="slide"
-        data-time="4:20–4:50"
         data-guardrail="true"
         data-notes="The final model is calibrated logistic regression. The boosted tree is a benchmark only. It did not improve the declared sample metrics enough to justify greater complexity, while logistic regression is easier to audit and explain."
       >
@@ -939,7 +916,6 @@ build 30-day episodes
       <!-- Live demo cue -->
       <section
         class="slide slide--demo"
-        data-time="4:50–7:35"
         data-guardrail="true"
         data-notes="Follow the demo script. Keep the development-preview banner in view. Explicitly show calibrated logistic as final, the tree as benchmark-only, and the absence of a vehicle-level prediction service. Walk Overview, Sample cohorts, Model & benchmark, and Data & methods."
       >
@@ -962,7 +938,6 @@ build 30-day episodes
       <!-- 7. Privacy architecture -->
       <section
         class="slide"
-        data-time="7:35–8:30"
         data-notes="The public bundle has no VINs, plates, ZIPs, stations, technician identifiers, private tokens, raw JSON, credentials, operational records, or row-level predictions. The browser has no database connection and fails closed if its aggregate contract does not validate."
       >
         <p class="eyebrow">Privacy architecture</p>
@@ -989,7 +964,6 @@ private read-only data
       <!-- 8. Limitations -->
       <section
         class="slide"
-        data-time="8:30–9:20"
         data-notes="Name the limitations directly: page-sampled cohort is not population-representative; feeds are partial and change over time; geography and source era are confounded; reject/abort do not necessarily mean mechanical failure; 2025 is a one-time development holdout, not external validation; and sample associations do not support county rankings or causal conclusions."
       >
         <p class="eyebrow">Limitations</p>
@@ -1010,7 +984,6 @@ private read-only data
       <!-- 9. Close -->
       <section
         class="slide slide--close"
-        data-time="9:20–10:00"
         data-notes="The prototype is complete at the development stage: one precise question, a leakage-safe timeline, calibrated logistic regression as the final model, a boosted-tree benchmark, and a privacy-reviewed static dashboard. Its value is the discipline of making only the claims the data and release boundary can support. Invite questions about episode construction, calibration, privacy, or the dashboard — not county winners and losers."
       >
         <p class="eyebrow">Close</p>
@@ -1074,7 +1047,6 @@ private read-only data
         );
         var total = slides.length;
         var progress = document.getElementById("progress");
-        var timecode = document.getElementById("timecode");
         var counter = document.getElementById("counter");
         var prevBtn = document.getElementById("prev");
         var nextBtn = document.getElementById("next");
@@ -1115,7 +1087,6 @@ private read-only data
           });
           var active = slides[current];
           progress.style.width = ((current + 1) / total) * 100 + "%";
-          timecode.textContent = active.getAttribute("data-time") || "";
           counter.textContent = current + 1 + " / " + total;
           notesText.textContent = active.getAttribute("data-notes") || "—";
           prevBtn.disabled = current === 0;
