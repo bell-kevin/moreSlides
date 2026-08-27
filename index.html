@@ -661,6 +661,80 @@
         cursor: pointer;
       }
 
+      /* ---------- Lift callout ---------- */
+      .lift {
+        margin: 0.9rem 0 0.5rem;
+        padding: 0.8rem 1.15rem;
+        max-width: 60ch;
+        background: var(--teal-100);
+        border-left: 4px solid var(--teal-600);
+        border-radius: var(--radius-sm);
+        color: var(--teal-800);
+        font-size: 0.94em;
+        line-height: 1.7;
+      }
+
+      .lift b {
+        font-family: var(--font-display);
+        font-size: 1.3em;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+
+      /* ---------- Calibration plot ---------- */
+      .calib {
+        display: block;
+        width: 100%;
+        max-width: 28rem;
+        height: auto;
+      }
+
+      .calib__grid line {
+        stroke: var(--sand-200);
+        stroke-width: 1;
+      }
+
+      .calib__ideal {
+        stroke: var(--ink-500);
+        stroke-width: 1.5;
+        stroke-dasharray: 6 5;
+      }
+
+      .calib__trace {
+        fill: none;
+        stroke: var(--teal-600);
+        stroke-width: 2;
+        stroke-linejoin: round;
+        opacity: 0.55;
+      }
+
+      .calib__dot {
+        fill: var(--teal-700);
+        stroke: var(--white);
+        stroke-width: 1.5;
+      }
+
+      .calib__tick {
+        font-family: var(--font-sans);
+        font-size: 13px;
+        fill: var(--ink-500);
+        font-variant-numeric: tabular-nums;
+      }
+
+      .calib__axis {
+        font-family: var(--font-sans);
+        font-size: 13px;
+        font-weight: 600;
+        fill: var(--ink-650);
+      }
+
+      .calib__note {
+        font-family: var(--font-sans);
+        font-size: 12.5px;
+        font-style: italic;
+        fill: var(--ink-500);
+      }
+
       /* ---------- Print / PDF backup ---------- */
       @media print {
         body {
@@ -839,13 +913,14 @@ build 30-day episodes
       <section
         class="slide"
         data-guardrail="true"
-        data-notes="Higher PR-AUC and lower Brier are better. Logistic beat both baselines and the boosted-tree benchmark in this one-time sample comparison. Avoid the word accuracy, which obscures class imbalance and calibration."
+        data-notes="Evaluated on 3,971 non-audit holdout episodes from 3,734 vehicles, 487 of them non-pass. Higher PR-AUC and lower Brier are better. The practical read is the lift line: ranking by score, the top 10% of episodes are non-pass 31.2 percent of the time against a 12.3 percent base rate — about two and a half times, roughly 1 in 3 instead of 1 in 8. Logistic beat both baselines and the boosted-tree benchmark in this one-time sample comparison. Avoid the word accuracy, which obscures class imbalance and calibration."
       >
         <p class="eyebrow">Model comparison</p>
         <table>
           <caption>
-            2025 one-time sample holdout · higher PR-AUC and lower Brier are
-            better · not population performance
+            2025 one-time sample holdout · 3,971 non-audit episodes from 3,734
+            vehicles, 487 non-pass · higher PR-AUC and lower Brier are better ·
+            not population performance
           </caption>
           <thead>
             <tr>
@@ -882,6 +957,11 @@ build 30-day episodes
             </tr>
           </tbody>
         </table>
+        <p class="lift">
+          Ranked by score, the top 10% of episodes are non-pass <b>31.2%</b> of
+          the time against a <b>12.3%</b> base rate — about
+          <strong>2.5× lift</strong>, roughly 1 in 3 instead of 1 in 8.
+        </p>
         <p class="muted">
           Logistic beat both baselines and the boosted-tree benchmark. We avoid
           the word “accuracy,” which hides class imbalance and calibration.
@@ -892,7 +972,7 @@ build 30-day episodes
       <section
         class="slide"
         data-guardrail="true"
-        data-notes="The final model is calibrated logistic regression. The boosted tree is a benchmark only. It did not improve the declared sample metrics enough to justify greater complexity, while logistic regression is easier to audit and explain."
+        data-notes="The final model is calibrated logistic regression; the boosted tree is a benchmark only. Say the selection order out loud, because the dashboard shows different numbers in a moment: candidates were chosen on the 2023 tune partition, where logistic led 0.282 to 0.274. The 2024 partition exists to fit Platt scaling, so selecting on it would be circular — that is why the dashboard cards carry a calibration-fit scope strip. 2025 was then opened once and confirmed the choice. If someone points at the dashboard and asks why not the tree, that is the answer: on 2024 the tree looks better, but 2024 is not a selection partition."
       >
         <p class="eyebrow">Model decision</p>
         <h2>Keep calibrated logistic regression</h2>
@@ -906,11 +986,98 @@ build 30-day episodes
             second final model.
           </li>
           <li>
+            <strong>Selected on 2023 tune</strong>, where logistic led
+            (<code>0.282</code> vs <code>0.274</code> PR-AUC). 2024 only fits
+            Platt scaling, so it cannot select; 2025 confirmed the choice.
+          </li>
+          <li>
             The tree did not improve the declared sample metrics enough to
             justify its complexity.
           </li>
           <li>Logistic regression is easier to audit and explain.</li>
         </ul>
+      </section>
+
+      <!-- 7. Calibration -->
+      <section
+        class="slide"
+        data-guardrail="true"
+        data-notes="Calibrated means the probabilities can be read as probabilities, not just as a ranking. Each dot is one decile of the 2025 holdout: predicted probability across, observed non-pass rate up. The dashed line is perfect calibration. The deciles rise monotonically and sit close to the line across the whole range — the lowest decile is predicted 4.7 percent and observes 4.0 percent, the highest is predicted 34.8 percent and observes 31.2 percent. That top decile is the same 31.2 percent from the lift line on the comparison slide. This is what the Brier score of 0.1011 summarizes in one number. Mid-range bins wobble because each holds about 400 episodes, so a handful of outcomes moves a point."
+      >
+        <p class="eyebrow">Calibration</p>
+        <h2>The probabilities mean what they say</h2>
+        <div class="cols">
+          <div>
+            <svg class="calib" viewBox="0 0 420 392" role="img" aria-labelledby="calibTitle calibDesc">
+            <title id="calibTitle">Reliability of the calibrated logistic model on the 2025 one-time sample holdout</title>
+            <desc id="calibDesc">Predicted non-pass probability by decile plotted against the observed non-pass rate. Points track the diagonal from about 0.05 to about 0.35.</desc>
+            <g class="calib__grid">
+            <line x1="62.0" y1="20.0" x2="62.0" y2="354.0" />
+            <line x1="62.0" y1="354.0" x2="396.0" y2="354.0" />
+            <line x1="145.5" y1="20.0" x2="145.5" y2="354.0" />
+            <line x1="62.0" y1="270.5" x2="396.0" y2="270.5" />
+            <line x1="229.0" y1="20.0" x2="229.0" y2="354.0" />
+            <line x1="62.0" y1="187.0" x2="396.0" y2="187.0" />
+            <line x1="312.5" y1="20.0" x2="312.5" y2="354.0" />
+            <line x1="62.0" y1="103.5" x2="396.0" y2="103.5" />
+            <line x1="396.0" y1="20.0" x2="396.0" y2="354.0" />
+            <line x1="62.0" y1="20.0" x2="396.0" y2="20.0" />
+            </g>
+            <line class="calib__ideal" x1="62.0" y1="354.0" x2="396.0" y2="20.0" />
+            <polyline class="calib__trace" points="101.5,320.4 113.1,309.8 121.4,284.6 129.9,307.7 139.2,286.7 151.7,248.8 168.0,265.7 190.9,219.4 234.0,179.4 352.2,93.2" />
+            <circle class="calib__dot" cx="101.5" cy="320.4" r="5" />
+            <circle class="calib__dot" cx="113.1" cy="309.8" r="5" />
+            <circle class="calib__dot" cx="121.4" cy="284.6" r="5" />
+            <circle class="calib__dot" cx="129.9" cy="307.7" r="5" />
+            <circle class="calib__dot" cx="139.2" cy="286.7" r="5" />
+            <circle class="calib__dot" cx="151.7" cy="248.8" r="5" />
+            <circle class="calib__dot" cx="168.0" cy="265.7" r="5" />
+            <circle class="calib__dot" cx="190.9" cy="219.4" r="5" />
+            <circle class="calib__dot" cx="234.0" cy="179.4" r="5" />
+            <circle class="calib__dot" cx="352.2" cy="93.2" r="5" />
+            <g class="calib__tick">
+            <text x="62.0" y="374.0" text-anchor="middle">0.0</text>
+            <text x="52.0" y="358.0" text-anchor="end">0.0</text>
+            <text x="145.5" y="374.0" text-anchor="middle">0.1</text>
+            <text x="52.0" y="274.5" text-anchor="end">0.1</text>
+            <text x="229.0" y="374.0" text-anchor="middle">0.2</text>
+            <text x="52.0" y="191.0" text-anchor="end">0.2</text>
+            <text x="312.5" y="374.0" text-anchor="middle">0.3</text>
+            <text x="52.0" y="107.5" text-anchor="end">0.3</text>
+            <text x="396.0" y="374.0" text-anchor="middle">0.4</text>
+            <text x="52.0" y="24.0" text-anchor="end">0.4</text>
+            </g>
+            <text class="calib__axis" x="229.0" y="388" text-anchor="middle">Predicted probability (decile mean)</text>
+            <text class="calib__axis" x="16" y="187.0" text-anchor="middle" transform="rotate(-90 16 187.0)">Observed non-pass rate</text>
+            <text class="calib__note" x="78.7" y="74.3">perfect calibration</text>
+            </svg>
+          </div>
+          <div>
+            <ul class="clean">
+              <li>
+                Each dot is one <strong>decile</strong> of the 2025 holdout —
+                predicted probability across, observed non-pass rate up.
+              </li>
+              <li>
+                The dashed line is <strong>perfect calibration</strong>. Deciles
+                rise monotonically and track it across the range.
+              </li>
+              <li>
+                Lowest decile: predicted <code>0.047</code>, observed
+                <code>0.040</code>. Highest: predicted <code>0.348</code>,
+                observed <code>0.312</code>.
+              </li>
+              <li>
+                This is what the <strong>Brier score of 0.1011</strong>
+                summarizes in a single number.
+              </li>
+            </ul>
+            <p class="muted" style="margin-top: 1.1rem">
+              Mid-range bins wobble — each holds roughly 400 episodes, so a few
+              outcomes move a point.
+            </p>
+          </div>
+        </div>
       </section>
 
       <!-- Live demo cue -->
@@ -1007,7 +1174,7 @@ private read-only data
       </section>
     </main>
 
-    <div class="counter" id="counter">1 / 10</div>
+    <div class="counter" id="counter">1 / 11</div>
 
     <nav class="nav" aria-label="Slide navigation">
       <button id="prev" title="Previous (←)" aria-label="Previous slide">‹</button>
