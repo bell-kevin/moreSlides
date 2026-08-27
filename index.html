@@ -1,0 +1,1209 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="no-referrer" />
+    <meta
+      name="description"
+      content="10-minute presentation deck for the Utah Vehicle Health development prototype."
+    />
+    <title>Utah Vehicle Health · 10-minute deck</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink-950: #172b2b;
+        --ink-800: #294342;
+        --ink-650: #49615f;
+        --ink-500: #6d817f;
+        --paper: #fffdf8;
+        --paper-warm: #faf5e9;
+        --sand-100: #f4ead4;
+        --sand-200: #e7d8b9;
+        --sand-400: #c5a66c;
+        --teal-800: #155e60;
+        --teal-700: #197477;
+        --teal-600: #23888a;
+        --teal-100: #dcefee;
+        --red-700: #a63d32;
+        --red-100: #f7e3df;
+        --amber-700: #a66516;
+        --amber-100: #f9eccd;
+        --purple-700: #704b87;
+        --purple-100: #eee4f3;
+        --gray-100: #edf0ed;
+        --gray-300: #cbd3d0;
+        --white: #ffffff;
+        --shadow-sm: 0 1px 2px rgb(23 43 43 / 7%), 0 7px 24px rgb(23 43 43 / 5%);
+        --shadow-md: 0 18px 48px rgb(23 43 43 / 10%);
+        --radius-sm: 0.55rem;
+        --radius-md: 0.9rem;
+        --radius-lg: 1.35rem;
+        --font-sans: Inter, ui-sans-serif, system-ui, -apple-system,
+          BlinkMacSystemFont, "Segoe UI", sans-serif;
+        --font-display: Georgia, "Times New Roman", serif;
+        --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+          monospace;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+      }
+
+      body {
+        min-width: 320px;
+        color: var(--ink-950);
+        background: var(--paper);
+        font-family: var(--font-sans);
+        font-size: clamp(1rem, 1.15vw + 0.55rem, 1.25rem);
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+        overflow: hidden;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0 0 0.6rem;
+        line-height: 1.12;
+        font-weight: 500;
+      }
+
+      h1 {
+        font-family: var(--font-display);
+        font-size: clamp(2.4rem, 5.2vw, 4.6rem);
+        letter-spacing: -0.035em;
+      }
+
+      h2 {
+        font-family: var(--font-display);
+        font-size: clamp(1.7rem, 3.4vw, 2.9rem);
+        letter-spacing: -0.02em;
+      }
+
+      p {
+        margin: 0 0 0.9rem;
+        max-width: 60ch;
+      }
+
+      strong {
+        font-weight: 600;
+      }
+
+      code {
+        font-family: var(--font-mono);
+        font-size: 0.9em;
+      }
+
+      /* ---------- Deck scaffold ---------- */
+      .deck {
+        position: fixed;
+        inset: 0;
+      }
+
+      .slide {
+        position: absolute;
+        inset: 0;
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.4rem;
+        padding: clamp(2.2rem, 5vw, 5rem) clamp(2.2rem, 7vw, 7rem)
+          clamp(3.6rem, 6vw, 5.5rem);
+        background: var(--paper);
+        animation: fade 0.32s ease;
+      }
+
+      .slide.is-active {
+        display: flex;
+      }
+
+      .slide--title {
+        background: radial-gradient(
+            120% 120% at 12% 0%,
+            var(--teal-100) 0%,
+            rgba(220, 239, 238, 0) 42%
+          ),
+          radial-gradient(
+            110% 110% at 100% 100%,
+            var(--sand-100) 0%,
+            rgba(244, 234, 212, 0) 46%
+          ),
+          var(--paper);
+      }
+
+      .slide--demo {
+        background: linear-gradient(140deg, var(--teal-800), var(--teal-600));
+        color: var(--white);
+      }
+
+      .slide--close {
+        background: radial-gradient(
+            120% 120% at 100% 0%,
+            var(--teal-100) 0%,
+            rgba(220, 239, 238, 0) 44%
+          ),
+          var(--paper-warm);
+      }
+
+      @keyframes fade {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .slide {
+          animation: none;
+        }
+      }
+
+      /* ---------- Shared slide bits ---------- */
+      .eyebrow {
+        margin: 0 0 0.9rem;
+        font-size: 0.72em;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--teal-700);
+      }
+
+      .slide--demo .eyebrow {
+        color: var(--teal-100);
+      }
+
+      .lede {
+        font-size: 1.12em;
+        color: var(--ink-800);
+        max-width: 46ch;
+      }
+
+      .muted {
+        color: var(--ink-650);
+        font-size: 0.94em;
+      }
+
+      .cols {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+        gap: clamp(1rem, 2.5vw, 2.4rem);
+        align-items: start;
+      }
+
+      ul.clean {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.55rem;
+        max-width: 62ch;
+      }
+
+      ul.clean li {
+        position: relative;
+        padding-left: 1.55rem;
+        color: var(--ink-800);
+      }
+
+      ul.clean li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.62em;
+        width: 0.55rem;
+        height: 0.55rem;
+        border-radius: 2px;
+        background: var(--teal-600);
+        transform: rotate(45deg);
+      }
+
+      ul.clean.excl li::before {
+        background: var(--red-700);
+      }
+
+      .flow {
+        font-family: var(--font-mono);
+        font-size: clamp(0.82rem, 1.4vw, 1.05rem);
+        line-height: 1.85;
+        color: var(--ink-800);
+        background: var(--white);
+        border: 1px solid var(--sand-200);
+        border-radius: var(--radius-md);
+        padding: 1.1rem 1.3rem;
+        box-shadow: var(--shadow-sm);
+        white-space: pre-wrap;
+        max-width: 62ch;
+      }
+
+      .slide--demo .flow {
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(255, 255, 255, 0.3);
+        color: var(--white);
+        box-shadow: none;
+      }
+
+      .question {
+        font-family: var(--font-display);
+        font-size: clamp(1.5rem, 3vw, 2.4rem);
+        line-height: 1.3;
+        color: var(--ink-950);
+        border-left: 5px solid var(--teal-600);
+        padding: 0.2rem 0 0.2rem 1.4rem;
+        margin: 0.4rem 0 1.4rem;
+        max-width: 30ch;
+      }
+
+      /* ---------- Stat chips ---------- */
+      .stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.9rem;
+      }
+
+      .stat {
+        background: var(--white);
+        border: 1px solid var(--sand-200);
+        border-radius: var(--radius-md);
+        padding: 0.9rem 1.15rem;
+        box-shadow: var(--shadow-sm);
+        min-width: 8.5rem;
+      }
+
+      .stat b {
+        display: block;
+        font-family: var(--font-display);
+        font-size: clamp(1.5rem, 3vw, 2.3rem);
+        color: var(--teal-800);
+        line-height: 1;
+      }
+
+      .stat span {
+        display: block;
+        margin-top: 0.35rem;
+        font-size: 0.8em;
+        color: var(--ink-650);
+      }
+
+      /* ---------- Timeline ---------- */
+      .timeline {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 0.6rem 0 1.2rem;
+      }
+
+      .timeline span {
+        padding: 0.5rem 0.85rem;
+        border-radius: 999px;
+        font-size: 0.82em;
+        background: var(--gray-100);
+        color: var(--ink-800);
+        border: 1px solid var(--gray-300);
+      }
+
+      .timeline span.hot {
+        background: var(--amber-100);
+        border-color: var(--sand-400);
+        color: var(--amber-700);
+        font-weight: 600;
+      }
+
+      /* ---------- Table ---------- */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--white);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+        font-size: clamp(0.85rem, 1.5vw, 1.05rem);
+      }
+
+      caption {
+        caption-side: top;
+        text-align: left;
+        margin-bottom: 0.7rem;
+        font-size: 0.82em;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        color: var(--ink-650);
+      }
+
+      th,
+      td {
+        padding: 0.6rem 0.9rem;
+        text-align: left;
+        border-bottom: 1px solid var(--sand-100);
+      }
+
+      thead th {
+        background: var(--paper-warm);
+        font-size: 0.85em;
+        letter-spacing: 0.02em;
+        color: var(--ink-800);
+      }
+
+      td.num,
+      th.num {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+
+      tr.final td {
+        background: var(--teal-100);
+        font-weight: 600;
+        color: var(--teal-800);
+      }
+
+      tr.bench td {
+        background: var(--purple-100);
+        color: var(--purple-700);
+      }
+
+      .role {
+        display: inline-block;
+        padding: 0.12rem 0.55rem;
+        border-radius: 999px;
+        font-size: 0.72em;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .role--final {
+        background: var(--teal-800);
+        color: var(--white);
+      }
+
+      .role--bench {
+        background: var(--purple-700);
+        color: var(--white);
+      }
+
+      .role--base {
+        background: var(--gray-300);
+        color: var(--ink-800);
+      }
+
+      /* ---------- Brand mark ---------- */
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1.4rem;
+      }
+
+      .brand svg {
+        width: 3rem;
+        height: 3rem;
+        color: var(--teal-700);
+      }
+
+      .brand small {
+        display: block;
+        font-size: 0.68em;
+        letter-spacing: 0.03em;
+        color: var(--ink-650);
+      }
+
+      .brand b {
+        font-family: var(--font-display);
+        font-size: 1.15rem;
+        font-weight: 500;
+      }
+
+      .byline {
+        margin-top: 1.8rem;
+        color: var(--ink-650);
+        font-size: 0.9em;
+      }
+
+      /* ---------- Guardrail band ---------- */
+      .guardrail {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 2.4rem;
+        margin: 0 auto;
+        width: max-content;
+        max-width: min(92vw, 70ch);
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.55rem 1.1rem;
+        background: var(--amber-100);
+        border: 1px solid var(--sand-400);
+        border-radius: 999px;
+        color: var(--amber-700);
+        font-size: 0.82em;
+        font-weight: 600;
+        text-align: center;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .guardrail__mark {
+        line-height: 1;
+      }
+
+      .slide--demo .guardrail {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.4);
+        color: var(--white);
+      }
+
+      /* ---------- Demo slide ---------- */
+      .demo-badge {
+        align-self: flex-start;
+        padding: 0.35rem 0.9rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.18);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        font-size: 0.78em;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .demo-routes {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.7rem;
+        margin: 1rem 0 1.4rem;
+      }
+
+      .demo-routes span {
+        padding: 0.55rem 1rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.16);
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        font-weight: 600;
+        font-size: 0.9em;
+      }
+
+      /* ---------- Chrome: progress, badges, nav, notes ---------- */
+      .progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 4px;
+        background: var(--teal-600);
+        width: 0;
+        transition: width 0.25s ease;
+        z-index: 30;
+      }
+
+      .timecode {
+        position: fixed;
+        top: 1rem;
+        right: 1.15rem;
+        z-index: 25;
+        font-family: var(--font-mono);
+        font-size: 0.78rem;
+        color: var(--ink-650);
+        background: var(--white);
+        border: 1px solid var(--sand-200);
+        border-radius: 999px;
+        padding: 0.28rem 0.7rem;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .counter {
+        position: fixed;
+        bottom: 0.9rem;
+        left: 1.15rem;
+        z-index: 25;
+        font-family: var(--font-mono);
+        font-size: 0.78rem;
+        color: var(--ink-650);
+        background: var(--white);
+        border: 1px solid var(--sand-200);
+        border-radius: 999px;
+        padding: 0.28rem 0.7rem;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .nav {
+        position: fixed;
+        bottom: 0.7rem;
+        right: 1rem;
+        z-index: 25;
+        display: flex;
+        gap: 0.4rem;
+      }
+
+      .nav button,
+      .help-btn {
+        font: inherit;
+        font-size: 0.9rem;
+        width: 2.3rem;
+        height: 2.3rem;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        border: 1px solid var(--sand-200);
+        background: var(--white);
+        color: var(--ink-800);
+        cursor: pointer;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .nav button:hover,
+      .help-btn:hover {
+        border-color: var(--teal-600);
+        color: var(--teal-800);
+      }
+
+      .nav button:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      .help-btn {
+        position: fixed;
+        bottom: 0.7rem;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 25;
+        width: auto;
+        height: 2.3rem;
+        padding: 0 0.9rem;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        gap: 0.4rem;
+      }
+
+      .notes {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 40;
+        max-height: 42vh;
+        overflow: auto;
+        transform: translateY(100%);
+        transition: transform 0.28s ease;
+        background: var(--ink-950);
+        color: #eaf1ef;
+        padding: 1.2rem clamp(1.4rem, 5vw, 4rem) 1.5rem;
+        box-shadow: 0 -12px 40px rgb(23 43 43 / 35%);
+      }
+
+      .notes.is-open {
+        transform: translateY(0);
+      }
+
+      .notes h4 {
+        margin: 0 0 0.5rem;
+        font-size: 0.78rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--teal-100);
+      }
+
+      .notes p {
+        margin: 0;
+        max-width: 80ch;
+        color: #dfe8e6;
+        font-size: 0.98rem;
+      }
+
+      .help {
+        position: fixed;
+        inset: 0;
+        z-index: 60;
+        display: none;
+        place-items: center;
+        background: rgb(23 43 43 / 55%);
+        padding: 1.5rem;
+      }
+
+      .help.is-open {
+        display: grid;
+      }
+
+      .help__card {
+        background: var(--paper);
+        border-radius: var(--radius-lg);
+        padding: 1.8rem 2rem;
+        max-width: 34rem;
+        box-shadow: var(--shadow-md);
+      }
+
+      .help__card h3 {
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .keys {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 0.55rem 1rem;
+        font-size: 0.95rem;
+      }
+
+      .keys kbd {
+        justify-self: start;
+        font-family: var(--font-mono);
+        font-size: 0.82em;
+        padding: 0.15rem 0.5rem;
+        border-radius: 0.4rem;
+        background: var(--gray-100);
+        border: 1px solid var(--gray-300);
+      }
+
+      .help__card button {
+        margin-top: 1.4rem;
+        font: inherit;
+        padding: 0.55rem 1.2rem;
+        border-radius: var(--radius-sm);
+        border: none;
+        background: var(--teal-700);
+        color: var(--white);
+        cursor: pointer;
+      }
+
+      /* ---------- Print / PDF backup ---------- */
+      @media print {
+        body {
+          overflow: visible;
+        }
+        .progress,
+        .timecode,
+        .counter,
+        .nav,
+        .help-btn,
+        .notes,
+        .help {
+          display: none !important;
+        }
+        .deck {
+          position: static;
+        }
+        .slide {
+          position: relative;
+          display: flex !important;
+          inset: auto;
+          min-height: 100vh;
+          page-break-after: always;
+          break-after: page;
+          animation: none;
+        }
+        .slide--demo,
+        .slide--title,
+        .slide--close {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="progress" id="progress"></div>
+    <div class="timecode" id="timecode">0:00–0:40</div>
+
+    <main class="deck" id="deck">
+      <!-- 1. Title & boundary -->
+      <section
+        class="slide slide--title is-active"
+        data-time="0:00–0:40"
+        data-guardrail="true"
+        data-notes="This is a presentation-ready development prototype built from a private, page-sampled 10,000-vehicle cohort. Every result I show is sample-based, not a population estimate. The project does not rank counties or diagnose vehicles."
+      >
+        <div class="brand">
+          <svg viewBox="0 0 56 56" aria-hidden="true">
+            <path d="M9 43 23 17l7 12 6-9 12 23H9Z" fill="currentColor"></path>
+            <path
+              d="m18 43 9-16 6 10 4-6 6 12H18Z"
+              fill="var(--sand-100)"
+            ></path>
+          </svg>
+          <span>
+            <b>Utah Vehicle Health</b>
+            <small>Returning vehicles · next first attempt</small>
+          </span>
+        </div>
+        <h1>Utah Vehicle Health</h1>
+        <p class="lede">
+          Predicting a returning vehicle's next-episode first-attempt non-pass
+          outcome.
+        </p>
+        <p class="muted">
+          One focused prediction question — a development prototype, not a
+          population study or decision tool.
+        </p>
+        <p class="byline">Kevin Bell · Summer 2026 development prototype</p>
+      </section>
+
+      <!-- 2. Research question -->
+      <section
+        class="slide"
+        data-time="0:40–1:25"
+        data-notes="Attempts separated by no more than 30 days form one episode. This keeps rapid fail/retest sequences from becoming repeated target rows. Non-pass combines fail, reject, and abort; blanks remain unlabeled."
+      >
+        <p class="eyebrow">Research question</p>
+        <blockquote class="question">
+          Using only information available before an inspection episode begins,
+          how well can a calibrated logistic regression estimate whether a
+          returning vehicle's next episode will have a first-attempt non-pass
+          outcome?
+        </blockquote>
+        <ul class="clean">
+          <li>
+            Attempts <strong>≤ 30 days apart</strong> form one episode — rapid
+            fail/retest sequences never become repeated target rows.
+          </li>
+          <li>
+            The target is the <strong>first attempt</strong> of a returning
+            vehicle's next episode.
+          </li>
+          <li>
+            <strong>Non-pass</strong> combines fail, reject, and abort; blanks
+            stay unlabeled.
+          </li>
+        </ul>
+      </section>
+
+      <!-- 3. Development data -->
+      <section
+        class="slide"
+        data-time="1:25–2:15"
+        data-guardrail="true"
+        data-notes="9,996 private tokens remained after validation, producing 83,552 source events and 69,588 episodes. These are reconciliation counts, not Utah totals. Page sampling over-represents vehicles with more inspection records, and participating feeds do not cover all 29 counties."
+      >
+        <p class="eyebrow">Development data</p>
+        <h2>Complete histories for a non-representative sample</h2>
+        <div class="cols">
+          <div>
+            <div class="flow">
+sample up to 10,000 vehicles
+   ↓
+retrieve their full histories
+   ↓
+build 30-day episodes
+   ↓
+44,659 eligible returning targets</div>
+          </div>
+          <div>
+            <div class="stats">
+              <div class="stat"><b>9,996</b><span>private tokens after validation</span></div>
+              <div class="stat"><b>83,552</b><span>source events</span></div>
+              <div class="stat"><b>69,588</b><span>episodes</span></div>
+              <div class="stat"><b>44,659</b><span>eligible targets</span></div>
+            </div>
+            <p class="muted" style="margin-top: 1rem">
+              Pipeline reconciliation counts — <strong>not Utah totals</strong>.
+              Page sampling over-represents vehicles with more records, and
+              feeds do not cover all 29 counties.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. Leakage-safe design -->
+      <section
+        class="slide"
+        data-time="2:15–3:10"
+        data-notes="Every feature window ends before the target episode. The model uses prior outcomes, history depth, timing, age, previously observed make/model, public county context, and season. It excludes current-test diagnostics, future records, identifiers, stations, technicians, and later attempts. The 2025 gate was opened once after specifications were frozen — a development holdout, not a pristine future test."
+      >
+        <p class="eyebrow">Leakage-safe design</p>
+        <h2>Every feature window ends before the target</h2>
+        <div class="timeline">
+          <span>2010–15 context</span>
+          <span>2016–22 train</span>
+          <span>2023 tune</span>
+          <span>2024 calibrate</span>
+          <span class="hot">2025 one-time holdout</span>
+          <span>2026 partial shadow</span>
+        </div>
+        <div class="cols">
+          <div>
+            <p class="muted" style="font-weight: 600; color: var(--teal-800)">
+              Uses (all pre-episode)
+            </p>
+            <ul class="clean">
+              <li>Prior outcomes, history depth, timing</li>
+              <li>Vehicle age, season, public county context</li>
+              <li>Previously observed make / model</li>
+            </ul>
+          </div>
+          <div>
+            <p class="muted" style="font-weight: 600; color: var(--red-700)">
+              Excludes
+            </p>
+            <ul class="clean excl">
+              <li>Current-test diagnostics &amp; later attempts</li>
+              <li>Future records, identifiers, stations, technicians</li>
+            </ul>
+          </div>
+        </div>
+        <p class="muted">
+          The 2025 gate was opened <strong>once</strong> after specs were
+          frozen — a development holdout, not a pristine future test.
+        </p>
+      </section>
+
+      <!-- 5. Model comparison -->
+      <section
+        class="slide"
+        data-time="3:10–4:20"
+        data-guardrail="true"
+        data-notes="Higher PR-AUC and lower Brier are better. Logistic beat both baselines and the boosted-tree benchmark in this one-time sample comparison. Avoid the word accuracy, which obscures class imbalance and calibration."
+      >
+        <p class="eyebrow">Model comparison</p>
+        <table>
+          <caption>
+            2025 one-time sample holdout · higher PR-AUC and lower Brier are
+            better · not population performance
+          </caption>
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Role</th>
+              <th class="num">PR-AUC</th>
+              <th class="num">Brier</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Training prevalence</td>
+              <td><span class="role role--base">Baseline</span></td>
+              <td class="num">0.123</td>
+              <td class="num">0.1076</td>
+            </tr>
+            <tr>
+              <td>Previous episode</td>
+              <td><span class="role role--base">Baseline</span></td>
+              <td class="num">0.158</td>
+              <td class="num">0.1731</td>
+            </tr>
+            <tr class="final">
+              <td>Logistic + Platt</td>
+              <td><span class="role role--final">Final</span></td>
+              <td class="num">0.261</td>
+              <td class="num">0.1011</td>
+            </tr>
+            <tr class="bench">
+              <td>Boosted tree + Platt</td>
+              <td><span class="role role--bench">Benchmark</span></td>
+              <td class="num">0.238</td>
+              <td class="num">0.1024</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="muted">
+          Logistic beat both baselines and the boosted-tree benchmark. We avoid
+          the word “accuracy,” which hides class imbalance and calibration.
+        </p>
+      </section>
+
+      <!-- 6. Model decision -->
+      <section
+        class="slide"
+        data-time="4:20–4:50"
+        data-guardrail="true"
+        data-notes="The final model is calibrated logistic regression. The boosted tree is a benchmark only. It did not improve the declared sample metrics enough to justify greater complexity, while logistic regression is easier to audit and explain."
+      >
+        <p class="eyebrow">Model decision</p>
+        <h2>Keep calibrated logistic regression</h2>
+        <ul class="clean">
+          <li>
+            <strong>Final model:</strong> calibrated logistic regression
+            (<code>C=0.03</code>, Platt scaling).
+          </li>
+          <li>
+            <strong>Benchmark only:</strong> histogram gradient boosting — not a
+            second final model.
+          </li>
+          <li>
+            The tree did not improve the declared sample metrics enough to
+            justify its complexity.
+          </li>
+          <li>Logistic regression is easier to audit and explain.</li>
+        </ul>
+      </section>
+
+      <!-- Live demo cue -->
+      <section
+        class="slide slide--demo"
+        data-time="4:50–7:35"
+        data-guardrail="true"
+        data-notes="Follow the demo script. Keep the development-preview banner in view. Explicitly show calibrated logistic as final, the tree as benchmark-only, and the absence of a vehicle-level prediction service. Walk Overview, Sample cohorts, Model & benchmark, and Data & methods."
+      >
+        <span class="demo-badge">Live dashboard demo · 2:45</span>
+        <h2 style="color: var(--white)">Switch to the dashboard</h2>
+        <p style="max-width: 48ch; color: rgba(255, 255, 255, 0.9)">
+          Follow <code>demo_script.md</code>. Keep the development-preview
+          banner in view. Show logistic as final, the tree as benchmark-only,
+          and that there is <strong>no vehicle-level prediction service</strong>.
+        </p>
+        <div class="demo-routes">
+          <span>1 · Overview</span>
+          <span>2 · Sample cohorts</span>
+          <span>3 · Model &amp; benchmark</span>
+          <span>4 · Data &amp; methods</span>
+        </div>
+        <div class="flow">node dashboard/server.mjs --lan   →   open the “Other devices” URL + /#overview</div>
+      </section>
+
+      <!-- 7. Privacy architecture -->
+      <section
+        class="slide"
+        data-time="7:35–8:30"
+        data-notes="The public bundle has no VINs, plates, ZIPs, stations, technician identifiers, private tokens, raw JSON, credentials, operational records, or row-level predictions. The browser has no database connection and fails closed if its aggregate contract does not validate."
+      >
+        <p class="eyebrow">Privacy architecture</p>
+        <h2>A deliberately narrow public boundary</h2>
+        <div class="flow">
+private read-only data
+   →  local modeling
+   →  suppressed aggregate JSON
+   →  allowlisted local static server
+   →  same-network demo browser</div>
+        <ul class="clean" style="margin-top: 1rem">
+          <li>
+            No VINs, plates, ZIPs, stations, technician IDs, private tokens, raw
+            JSON, credentials, operational records, or row-level predictions.
+          </li>
+          <li>The browser has no database connection.</li>
+          <li>
+            The dashboard <strong>fails closed</strong> if its aggregate
+            contract does not validate.
+          </li>
+        </ul>
+      </section>
+
+      <!-- 8. Limitations -->
+      <section
+        class="slide"
+        data-time="8:30–9:20"
+        data-notes="Name the limitations directly: page-sampled cohort is not population-representative; feeds are partial and change over time; geography and source era are confounded; reject/abort do not necessarily mean mechanical failure; 2025 is a one-time development holdout, not external validation; and sample associations do not support county rankings or causal conclusions."
+      >
+        <p class="eyebrow">Limitations</p>
+        <h2>What this sample cannot claim</h2>
+        <ul class="clean">
+          <li>The page-sampled cohort is not population-representative.</li>
+          <li>Feeds are partial and change over time.</li>
+          <li>Geography and source era are confounded.</li>
+          <li>Reject / abort do not necessarily mean mechanical failure.</li>
+          <li>2025 is a one-time development holdout, not external validation.</li>
+          <li>
+            Sample associations do not support county rankings or causal
+            conclusions.
+          </li>
+        </ul>
+      </section>
+
+      <!-- 9. Close -->
+      <section
+        class="slide slide--close"
+        data-time="9:20–10:00"
+        data-notes="The prototype is complete at the development stage: one precise question, a leakage-safe timeline, calibrated logistic regression as the final model, a boosted-tree benchmark, and a privacy-reviewed static dashboard. Its value is the discipline of making only the claims the data and release boundary can support. Invite questions about episode construction, calibration, privacy, or the dashboard — not county winners and losers."
+      >
+        <p class="eyebrow">Close</p>
+        <h2>A complete, honest development prototype</h2>
+        <p class="lede">
+          One precise question · a leakage-safe timeline · calibrated logistic
+          regression as the final model · a boosted-tree benchmark · a
+          privacy-reviewed static dashboard.
+        </p>
+        <p class="muted">
+          The value is the discipline of making only the claims the data and
+          release boundary can support.
+        </p>
+        <p style="font-family: var(--font-display); font-size: 1.6rem; color: var(--teal-800); margin-top: 1rem">
+          Questions?
+        </p>
+        <p class="muted">
+          Happy to go deep on episode construction, calibration, privacy, or the
+          dashboard.
+        </p>
+      </section>
+    </main>
+
+    <div class="counter" id="counter">1 / 10</div>
+
+    <nav class="nav" aria-label="Slide navigation">
+      <button id="prev" title="Previous (←)" aria-label="Previous slide">‹</button>
+      <button id="next" title="Next (→)" aria-label="Next slide">›</button>
+    </nav>
+
+    <button class="help-btn" id="helpToggle" title="Keyboard help (?)">
+      ⌨ controls
+    </button>
+
+    <aside class="notes" id="notes" aria-live="polite">
+      <h4>Speaker notes</h4>
+      <p id="notesText"></p>
+    </aside>
+
+    <div class="help" id="help">
+      <div class="help__card">
+        <h3>Deck controls</h3>
+        <div class="keys">
+          <kbd>→ / Space</kbd><span>Next slide</span>
+          <kbd>←</kbd><span>Previous slide</span>
+          <kbd>Home / End</kbd><span>First / last slide</span>
+          <kbd>S</kbd><span>Toggle speaker notes</span>
+          <kbd>F</kbd><span>Toggle fullscreen</span>
+          <kbd>P</kbd><span>Print / save as PDF (backup)</span>
+          <kbd>?</kbd><span>Show this help</span>
+        </div>
+        <button id="helpClose">Got it</button>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        "use strict";
+        var slides = Array.prototype.slice.call(
+          document.querySelectorAll(".slide")
+        );
+        var total = slides.length;
+        var progress = document.getElementById("progress");
+        var timecode = document.getElementById("timecode");
+        var counter = document.getElementById("counter");
+        var prevBtn = document.getElementById("prev");
+        var nextBtn = document.getElementById("next");
+        var notes = document.getElementById("notes");
+        var notesText = document.getElementById("notesText");
+        var help = document.getElementById("help");
+        var current = 0;
+
+        var GUARDRAIL =
+          "Private 10,000-vehicle development sample; sample results, not population estimates.";
+        slides.forEach(function (s) {
+          if (s.getAttribute("data-guardrail") === "true") {
+            var band = document.createElement("div");
+            band.className = "guardrail";
+            var mark = document.createElement("span");
+            mark.className = "guardrail__mark";
+            mark.setAttribute("aria-hidden", "true");
+            mark.textContent = "\u25C6";
+            band.appendChild(mark);
+            band.appendChild(document.createTextNode(GUARDRAIL));
+            s.appendChild(band);
+          }
+        });
+
+        function clampIndex(n) {
+          return Math.max(0, Math.min(total - 1, n));
+        }
+
+        function readHash() {
+          var m = /^#(\d+)$/.exec(window.location.hash || "");
+          if (!m) return 0;
+          return clampIndex(parseInt(m[1], 10) - 1);
+        }
+
+        function render() {
+          slides.forEach(function (s, i) {
+            s.classList.toggle("is-active", i === current);
+          });
+          var active = slides[current];
+          progress.style.width = ((current + 1) / total) * 100 + "%";
+          timecode.textContent = active.getAttribute("data-time") || "";
+          counter.textContent = current + 1 + " / " + total;
+          notesText.textContent = active.getAttribute("data-notes") || "—";
+          prevBtn.disabled = current === 0;
+          nextBtn.disabled = current === total - 1;
+          var wanted = "#" + (current + 1);
+          if (window.location.hash !== wanted) {
+            history.replaceState(null, "", wanted);
+          }
+        }
+
+        function go(n) {
+          current = clampIndex(n);
+          render();
+        }
+
+        prevBtn.addEventListener("click", function () {
+          go(current - 1);
+        });
+        nextBtn.addEventListener("click", function () {
+          go(current + 1);
+        });
+
+        document.getElementById("helpToggle").addEventListener("click", function () {
+          help.classList.toggle("is-open");
+        });
+        document.getElementById("helpClose").addEventListener("click", function () {
+          help.classList.remove("is-open");
+        });
+        help.addEventListener("click", function (e) {
+          if (e.target === help) help.classList.remove("is-open");
+        });
+
+        document.addEventListener("keydown", function (e) {
+          if (e.metaKey || e.ctrlKey || e.altKey) return;
+          switch (e.key) {
+            case "ArrowRight":
+            case "PageDown":
+            case " ":
+              e.preventDefault();
+              go(current + 1);
+              break;
+            case "ArrowLeft":
+            case "PageUp":
+              e.preventDefault();
+              go(current - 1);
+              break;
+            case "Home":
+              e.preventDefault();
+              go(0);
+              break;
+            case "End":
+              e.preventDefault();
+              go(total - 1);
+              break;
+            case "s":
+            case "S":
+              notes.classList.toggle("is-open");
+              break;
+            case "f":
+            case "F":
+              if (!document.fullscreenElement) {
+                if (document.documentElement.requestFullscreen)
+                  document.documentElement.requestFullscreen();
+              } else if (document.exitFullscreen) {
+                document.exitFullscreen();
+              }
+              break;
+            case "p":
+            case "P":
+              window.print();
+              break;
+            case "?":
+              help.classList.toggle("is-open");
+              break;
+            case "Escape":
+              help.classList.remove("is-open");
+              notes.classList.remove("is-open");
+              break;
+          }
+        });
+
+        window.addEventListener("hashchange", function () {
+          go(readHash());
+        });
+
+        current = readHash();
+        render();
+      })();
+    </script>
+  </body>
+</html>
