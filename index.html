@@ -798,7 +798,7 @@
           outcome.
         </p>
         <p class="muted">
-          One focused prediction question — a development prototype, not a
+          One focused prediction question, a development prototype, not a
           population study or decision tool.
         </p>
         <p class="byline">Kevin Bell · Summer 2026 development prototype</p>
@@ -818,7 +818,7 @@
         </blockquote>
         <ul class="clean">
           <li>
-            Attempts <strong>≤ 30 days apart</strong> form one episode — rapid
+            Attempts <strong>≤ 30 days apart</strong> form one episode, rapid
             fail/retest sequences never become repeated target rows.
           </li>
           <li>
@@ -859,7 +859,7 @@ build 30-day episodes
               <div class="stat"><b>44,659</b><span>eligible targets</span></div>
             </div>
             <p class="muted" style="margin-top: 1rem">
-              Pipeline reconciliation counts — <strong>not Utah totals</strong>.
+              Pipeline reconciliation counts, <strong>not Utah totals</strong>.
               Page sampling over-represents vehicles with more records, and
               feeds do not cover all 29 counties.
             </p>
@@ -870,7 +870,7 @@ build 30-day episodes
       <!-- 4. Leakage-safe design -->
       <section
         class="slide"
-        data-notes="Every feature window ends before the target episode. The model uses prior outcomes, history depth, timing, age, previously observed make/model, public county context, and season. It excludes current-test diagnostics, future records, identifiers, stations, technicians, and later attempts. The 2025 gate was opened once after specifications were frozen — a development holdout, not a pristine future test."
+        data-notes="Every feature window ends before the target episode. The model uses prior outcomes, history depth, timing, age, previously observed make/model, public county context, and season. It excludes current-test diagnostics, future records, identifiers, stations, technicians, and later attempts. The 2025 gate was opened once after specifications were frozen, a development holdout, not a pristine future test."
       >
         <p class="eyebrow">Leakage-safe design</p>
         <h2>Every feature window ends before the target</h2>
@@ -905,7 +905,7 @@ build 30-day episodes
         </div>
         <p class="muted">
           The 2025 gate was opened <strong>once</strong> after specs were
-          frozen — a development holdout, not a pristine future test.
+          frozen, a development holdout, not a pristine future test.
         </p>
       </section>
 
@@ -913,7 +913,7 @@ build 30-day episodes
       <section
         class="slide"
         data-guardrail="true"
-        data-notes="Evaluated on 3,971 non-audit holdout episodes from 3,734 vehicles, 487 of them non-pass. Higher PR-AUC and lower Brier are better. The practical read is the lift line: ranking by score, the top 10% of episodes are non-pass 31.2 percent of the time against a 12.3 percent base rate — about two and a half times, roughly 1 in 3 instead of 1 in 8. Logistic beat both baselines and the boosted-tree benchmark in this one-time sample comparison. Avoid the word accuracy, which obscures class imbalance and calibration."
+        data-notes="Evaluated on 3,971 non-audit holdout episodes from 3,734 vehicles, 487 of them non-pass. Higher PR-AUC and lower Brier are better. The practical read is the lift line: ranking by score, the top 10% of episodes are non-pass 31.2 percent of the time against a 12.3 percent base rate, about two and a half times, roughly 1 in 3 instead of 1 in 8. Logistic beat both baselines and the boosted-tree benchmark in this one-time sample comparison. Avoid the word accuracy, which obscures class imbalance and calibration."
       >
         <p class="eyebrow">Model comparison</p>
         <table>
@@ -959,7 +959,7 @@ build 30-day episodes
         </table>
         <p class="lift">
           Ranked by score, the top 10% of episodes are non-pass <b>31.2%</b> of
-          the time against a <b>12.3%</b> base rate — about
+          the time against a <b>12.3%</b> base rate, about
           <strong>2.5× lift</strong>, roughly 1 in 3 instead of 1 in 8.
         </p>
         <p class="muted">
@@ -972,7 +972,7 @@ build 30-day episodes
       <section
         class="slide"
         data-guardrail="true"
-        data-notes="The final model is calibrated logistic regression; the boosted tree is a benchmark only. Say the selection order out loud, because the dashboard shows different numbers in a moment: candidates were chosen on the 2023 tune partition, where logistic led 0.282 to 0.274. The 2024 partition exists to fit Platt scaling, so selecting on it would be circular — that is why the dashboard cards carry a calibration-fit scope strip. 2025 was then opened once and confirmed the choice. If someone points at the dashboard and asks why not the tree, that is the answer: on 2024 the tree looks better, but 2024 is not a selection partition."
+        data-notes="The final model is calibrated logistic regression; the boosted tree is a benchmark only. Say the selection order out loud, because the dashboard shows different numbers in a moment: candidates were chosen on the 2023 tune partition, where logistic led 0.282 to 0.274. The 2024 partition exists to fit Platt scaling, so selecting on it would be circular, that is why the dashboard cards carry a calibration-fit scope strip. 2025 was then opened once and confirmed the choice. If someone points at the dashboard and asks why not the tree, that is the answer: on 2024 the tree looks better, but 2024 is not a selection partition."
       >
         <p class="eyebrow">Model decision</p>
         <h2>Keep calibrated logistic regression</h2>
@@ -982,7 +982,7 @@ build 30-day episodes
             (<code>C=0.03</code>, Platt scaling).
           </li>
           <li>
-            <strong>Benchmark only:</strong> histogram gradient boosting — not a
+            <strong>Benchmark only:</strong> histogram gradient boosting, not a
             second final model.
           </li>
           <li>
@@ -1002,7 +1002,7 @@ build 30-day episodes
       <section
         class="slide"
         data-guardrail="true"
-        data-notes="Calibrated means the probabilities can be read as probabilities, not just as a ranking. Each dot is one decile of the 2025 holdout: predicted probability across, observed non-pass rate up. The dashed line is perfect calibration. The deciles rise monotonically and sit close to the line across the whole range — the lowest decile is predicted 4.7 percent and observes 4.0 percent, the highest is predicted 34.8 percent and observes 31.2 percent. That top decile is the same 31.2 percent from the lift line on the comparison slide. This is what the Brier score of 0.1011 summarizes in one number. Mid-range bins wobble because each holds about 400 episodes, so a handful of outcomes moves a point."
+        data-notes="Calibrated means the probabilities can be read as probabilities, not just as a ranking. Each dot is one decile of the 2025 holdout: predicted probability across, observed non-pass rate up. The dashed line is perfect calibration. The deciles rise monotonically and sit close to the line across the whole range, the lowest decile is predicted 4.7 percent and observes 4.0 percent, the highest is predicted 34.8 percent and observes 31.2 percent. That top decile is the same 31.2 percent from the lift line on the comparison slide. This is what the Brier score of 0.1011 summarizes in one number. Mid-range bins wobble because each holds about 400 episodes, so a handful of outcomes moves a point."
       >
         <p class="eyebrow">Calibration</p>
         <h2>The probabilities mean what they say</h2>
@@ -1055,7 +1055,7 @@ build 30-day episodes
           <div>
             <ul class="clean">
               <li>
-                Each dot is one <strong>decile</strong> of the 2025 holdout —
+                Each dot is one <strong>decile</strong> of the 2025 holdout,
                 predicted probability across, observed non-pass rate up.
               </li>
               <li>
@@ -1073,7 +1073,7 @@ build 30-day episodes
               </li>
             </ul>
             <p class="muted" style="margin-top: 1.1rem">
-              Mid-range bins wobble — each holds roughly 400 episodes, so a few
+              Mid-range bins wobble, each holds roughly 400 episodes, so a few
               outcomes move a point.
             </p>
           </div>
@@ -1151,7 +1151,7 @@ private read-only data
       <!-- 9. Close -->
       <section
         class="slide slide--close"
-        data-notes="The prototype is complete at the development stage: one precise question, a leakage-safe timeline, calibrated logistic regression as the final model, a boosted-tree benchmark, and a privacy-reviewed static dashboard. Its value is the discipline of making only the claims the data and release boundary can support. Invite questions about episode construction, calibration, privacy, or the dashboard — not county winners and losers."
+        data-notes="The prototype is complete at the development stage: one precise question, a leakage-safe timeline, calibrated logistic regression as the final model, a boosted-tree benchmark, and a privacy-reviewed static dashboard. Its value is the discipline of making only the claims the data and release boundary can support. Invite questions about episode construction, calibration, privacy, or the dashboard, not county winners and losers."
       >
         <p class="eyebrow">Close</p>
         <h2>A complete, honest development prototype</h2>
